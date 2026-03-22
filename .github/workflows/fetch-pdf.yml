@@ -1,0 +1,27 @@
+name: Fetch PDF
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'PDF URL'
+        required: true
+      path:
+        description: 'Destination path in repo (e.g. papers/foo.pdf)'
+        required: true
+        default: 'papers/'
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download PDF
+        run: |
+          mkdir -p "$(dirname "${{ github.event.inputs.path }}")"
+          curl -L -o "${{ github.event.inputs.path }}" "${{ github.event.inputs.url }}"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add "${{ github.event.inputs.path }}"
+          git commit -m "Add $(basename "${{ github.event.inputs.path }}")"
+          git push
