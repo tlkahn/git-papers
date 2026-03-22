@@ -9,6 +9,9 @@ on:
         description: 'Destination path in repo (e.g. papers/foo.pdf)'
         required: true
         default: 'papers/'
+permissions:
+  contents: write
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
