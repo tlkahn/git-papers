@@ -26,5 +26,9 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add "${{ github.event.inputs.path }}"
-          git commit -m "Add $(basename "${{ github.event.inputs.path }}")"
-          git push
+          if git diff --cached --quiet; then
+            echo "File already exists and is identical — skipping commit."
+          else
+            git commit -m "Add $(basename "${{ github.event.inputs.path }}")"
+            git push
+          fi
